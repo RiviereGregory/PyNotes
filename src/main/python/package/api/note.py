@@ -20,7 +20,19 @@ class Note:
     def path(self):
         return os.path.join(NOTES_DIR, self.uuid + ".json")
 
+    @property
+    def content(self):
+        return self._content
+
+    @content.setter
+    def content(self, value):
+        if isinstance(value,str):
+            self._content = value
+        else:
+            raise TypeError("Valeur invalide (besoin d'une chaine de caractères.)")
 
 if __name__ == '__main__':
     n = Note(title="Ceci est une note", content="ceci est un contenu")
-    print(n.path)
+    print(n.content)
+    n.content = 5
+    print(n.content)
