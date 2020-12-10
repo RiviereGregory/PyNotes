@@ -18,10 +18,6 @@ class Note:
         return self.title
 
     @property
-    def path(self):
-        return os.path.join(NOTES_DIR, self.uuid + ".json")
-
-    @property
     def content(self):
         return self._content
 
@@ -31,6 +27,16 @@ class Note:
             self._content = value
         else:
             raise TypeError("Valeur invalide (besoin d'une chaine de caractères.)")
+
+    def delete(self):
+        os.remove(self.path)
+        if os.path.exists(self.path):
+            return False
+        return True
+
+    @property
+    def path(self):
+        return os.path.join(NOTES_DIR, self.uuid + ".json")
 
     def save(self):
         if not os.path.exists(NOTES_DIR):
@@ -44,4 +50,6 @@ class Note:
 if __name__ == '__main__':
     n = Note(title="Ceci est une note", content="ceci est un contenu")
     print(n.content)
-    n.save()
+    n.uuid = "e5b5c675-ae80-4935-a7c6-2965fc264d81"
+    resultat = n.delete()
+    print(resultat)
