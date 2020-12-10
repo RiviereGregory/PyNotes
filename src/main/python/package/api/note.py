@@ -1,3 +1,4 @@
+import json
 import os
 from uuid import uuid4
 
@@ -26,13 +27,21 @@ class Note:
 
     @content.setter
     def content(self, value):
-        if isinstance(value,str):
+        if isinstance(value, str):
             self._content = value
         else:
             raise TypeError("Valeur invalide (besoin d'une chaine de caractères.)")
 
+    def save(self):
+        if not os.path.exists(NOTES_DIR):
+            os.makedirs(NOTES_DIR)
+
+        data = {"title": self.title, "content": self.content}
+        with open(self.path, "w") as f:
+            json.dump(data, f, indent=4)
+
+
 if __name__ == '__main__':
     n = Note(title="Ceci est une note", content="ceci est un contenu")
     print(n.content)
-    n.content = 5
-    print(n.content)
+    n.save()
