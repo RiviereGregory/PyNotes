@@ -1,13 +1,31 @@
 import json
 import os
+from glob import glob
 from uuid import uuid4
 
 from package.api.constants import NOTES_DIR
 
 
+def get_notes():
+    notes = []
+    fichiers = glob(os.path.join(NOTES_DIR, "*.json"))
+    for fichier in fichiers:
+        with open(fichier, "r") as f:
+            note_data = json.load(f)
+            note_uuid = os.path.splitext(os.path.basename(fichier))[0]
+            note_title = note_data.get("title")
+            note_content = note_data.get("content")
+            note = Note(uuid=note_uuid, title=note_title, content=note_content)
+            notes.append(note)
+    return notes
+
+
 class Note:
     def __init__(self, title="", content="", uuid=None):
-        self.uuid = str(uuid4())
+        if uuid:
+            self.uuid = uuid
+        else:
+            self.uuid = str(uuid4())
         self.title = title
         self.content = content
 
@@ -48,8 +66,9 @@ class Note:
 
 
 if __name__ == '__main__':
-    n = Note(title="Ceci est une note", content="ceci est un contenu")
-    print(n.content)
-    n.uuid = "e5b5c675-ae80-4935-a7c6-2965fc264d81"
-    resultat = n.delete()
-    print(resultat)
+    # for i in range(5):
+    #     n = Note(title=f"Ceci est une note {i}", content=f"ceci est un contenu {i}")
+    #     n.save()
+    #     print(n.content)
+    notes = get_notes()
+    print(notes)
