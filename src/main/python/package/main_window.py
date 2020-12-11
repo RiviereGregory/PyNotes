@@ -1,5 +1,7 @@
 from PySide2 import QtWidgets, QtGui
 
+from package.api.note import Note
+
 
 class MainWindow(QtWidgets.QWidget):
     def __init__(self):
@@ -38,7 +40,13 @@ class MainWindow(QtWidgets.QWidget):
         QtWidgets.QShortcut(QtGui.QKeySequence("Backspace"), self.lw_notes, self.delete_selected_note)
 
     def create_note(self):
-        print("Création d'une nouvelle note")
+        titre, resultat = QtWidgets.QInputDialog.getText(self, "Ajouter une note", "Titre: ")
+        if resultat and titre:
+            note = Note(title=titre)
+            note.save()
+            lw_item = QtWidgets.QListWidgetItem(titre)
+            lw_item.note = note
+            self.lw_notes.addItem(lw_item)
 
     def delete_selected_note(self):
         print("Suppression de la note")
