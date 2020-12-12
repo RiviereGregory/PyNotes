@@ -54,14 +54,17 @@ class MainWindow(QtWidgets.QWidget):
             self.add_note_to_listwidget(note)
 
     def delete_selected_note(self):
-        selected_items = self.lw_notes.selectedItems()
-        if not selected_items:
-            return false
+        selected_item = self.get_selected_lw_item()
+        if selected_item :
+            resultat = selected_item.note.delete()
+            if resultat:
+                self.lw_notes.takeItem(self.lw_notes.row(selected_item))
 
-        selected_item = selected_items[0]
-        resultat = selected_item.note.delete()
-        if resultat:
-            self.lw_notes.takeItem(self.lw_notes.row(selected_item))
+    def get_selected_lw_item(self):
+        selected_items = self.lw_notes.selectedItems()
+        if selected_items:
+            return selected_items[0]
+        return None
 
     def populate_notes(self):
         notes = get_notes()
@@ -72,4 +75,7 @@ class MainWindow(QtWidgets.QWidget):
         print("Chargement du contenu de la note")
 
     def save_note(self):
-        print("Sauvegarde du contenu de la note")
+        selected_item = self.get_selected_lw_item()
+        if selected_item:
+            selected_item.note.content = self.te_contenu.toPlainText()
+            selected_item.note.save()
