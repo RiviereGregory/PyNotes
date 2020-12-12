@@ -72,7 +72,11 @@ class MainWindow(QtWidgets.QWidget):
             self.add_note_to_listwidget(note)
 
     def populate_note_content(self):
-        print("Chargement du contenu de la note")
+        selected_item = self.get_selected_lw_item()
+        if selected_item:
+            self.te_contenu.setText(selected_item.note.content)
+        else :
+            self.te_contenu.clear()
 
     def save_note(self):
         selected_item = self.get_selected_lw_item()
